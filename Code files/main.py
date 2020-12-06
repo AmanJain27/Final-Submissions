@@ -7,7 +7,7 @@ from diffpriv import diffpriv
 
 
 # import haberman dataset
-filename = 'C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\haberman.csv'
+filename = '..\\haberman.csv'
 names= ['Age', 'Year Of Operation 19', 'No. of Positive axillary nodes', 'Survival Status']
 hb = pd.read_csv(filename,names=names, header=None)
 
@@ -44,7 +44,7 @@ decision = None
 
 
 # anonymize the dataset before writing a differentially private dataset
-filename_generalized = "C:\\Users\\AmanH\\Downloads\\2haberman.csv"
+filename_generalized = "..\\2haberman.csv"
 
 hb_g = pd.read_csv(filename_generalized)
 #print(hb_g)
@@ -81,17 +81,17 @@ survival = diffpriv(epsilons, dp, X_train, y_train, X_test, y_test, y_arr, y, x)
 from writeToFiles import update_contents_in_files
 
 col_names = ['Age', 'Year of operation', 'Positive Aux nodes']
-path = f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\diff privacy"
+path = f"..\\diff privacy"
 depth_start = 2
 depth_end = 12
 step = 2
 acc = update_contents_in_files(path, depth_start, depth_end, step, epsilons,  col_names, x_g, y, survival)
 import os
-if not os.path.isdir(f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\Privacy_concerned"):
-	os.mkdir(f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\Privacy_concerned")
+if not os.path.isdir(f"..\\Privacy_concerned"):
+	os.mkdir(f"..\\Privacy_concerned")
 
-if not os.path.isdir(f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\IndustrialVal_concerned"):
-	os.mkdir(f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\IndustrialVal_concerned")
+if not os.path.isdir(f"..\\IndustrialVal_concerned"):
+	os.mkdir(f"..\\IndustrialVal_concerned")
 
 
 avg = sum(acc) / len(acc)
@@ -104,14 +104,14 @@ import shutil
 
 for i in range(len(acc)):
 	if acc[i] < avg and i < alt_depth_start * 2:
-		if not os.path.isfile(f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\Privacy_concerned\\haberman{i+1}.csv"):
-			shutil.copyfile(f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i%4) + 1}.csv", f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\Privacy_concerned\\haberman{i+1}.csv")
+		if not os.path.isfile(f"..\\Privacy_concerned\\haberman{i+1}.csv"):
+			shutil.copyfile(f"..\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i%4) + 1}.csv", f"..\\Privacy_concerned\\haberman{i+1}.csv")
 
 	elif acc[i] >= avg and i < alt_depth_start * 2:
-		if not os.path.isfile(f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\Privacy_concerned\\haberman{i+1}.csv"):
+		if not os.path.isfile(f"..\\Privacy_concerned\\haberman{i+1}.csv"):
 			shutil.copyfile(
-		f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i%4) + 1}.csv",
-		f"C:\\Users\\AmanH\\PycharmProjects\PPDM\\venv\\DefTech-Hackathon\\IndustrialVal_concerned\\haberman{i+1}.csv")
+		f"..\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i%4) + 1}.csv",
+		f"..\\IndustrialVal_concerned\\haberman{i+1}.csv")
 
 	if  i >= alt_depth_start * 2:
 		alt_depth_start += 2
