@@ -87,25 +87,44 @@ depth_end = 12
 step = 2
 acc = update_contents_in_files(path, depth_start, depth_end, step, epsilons,  col_names, x_g, y, survival)
 import os
-if not os.path.isdir(f"..\\Privacy_concerned"):
-	os.mkdir(f"..\\Privacy_concerned")
-
-if not os.path.isdir(f"..\\IndustrialVal_concerned"):
-	os.mkdir(f"..\\IndustrialVal_concerned")
+# if not os.path.isdir(f"..\\Privacy_concerned"):
+# 	os.mkdir(f"..\\Privacy_concerned")
+#
+# if not os.path.isdir(f"..\\IndustrialVal_concerned"):
+# 	os.mkdir(f"..\\IndustrialVal_concerned")
 
 
 avg = sum(acc) / len(acc)
+
+best_priv = min(acc)
+best_ind = max(acc)
+
+
 
 alt_depth_start = depth_start
 alt_depth_end = depth_end
 
 import shutil
 
+if os.path.isdir(f"..\\Privacy_concerned"):
+	shutil.rmtree(f'..\\Privacy_concerned')
+
+if os.path.isdir(f"..\\IndustrialVal_concerned"):
+	shutil.rmtree(f'..\\IndustrialVal_concerned')
+
+os.mkdir(f"..\\Privacy_concerned")
+os.mkdir(f"..\\IndustrialVal_concerned")
+
+
 
 for i in range(len(acc)):
 	if acc[i] < avg and i < alt_depth_start * 2:
 		if not os.path.isfile(f"..\\Privacy_concerned\\haberman{i+1}.csv"):
+
 			shutil.copyfile(f"..\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i%4) + 1}.csv", f"..\\Privacy_concerned\\haberman{i+1}.csv")
+			if i == acc.index(best_priv):
+				shutil.copyfile(f"..\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i % 4) + 1}.csv",
+				                f"..\\Privacy_concerned\\haberman{i + 1}_best.csv")
 
 	elif acc[i] >= avg and i < alt_depth_start * 2:
 		if not os.path.isfile(f"..\\Privacy_concerned\\haberman{i+1}.csv"):
@@ -113,8 +132,18 @@ for i in range(len(acc)):
 		f"..\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i%4) + 1}.csv",
 		f"..\\IndustrialVal_concerned\\haberman{i+1}.csv")
 
+			if i == acc.index(best_ind):
+				shutil.copyfile(
+					f"..\\diff privacy\\Depth={alt_depth_start}\\haberman_generalized{(i % 4) + 1}.csv",
+					f"..\\IndustrialVal_concerned\\haberman{i + 1}_best.csv")
+
 	if  i >= alt_depth_start * 2:
 		alt_depth_start += 2
+
+
+print(acc)
+print(avg)
+
 
 from gui import frontend
 frontend()
